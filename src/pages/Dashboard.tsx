@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { getLeads, updateLeadStatus } from '@/lib/supabase';
 import Header from '@/components/Header';
@@ -34,7 +33,6 @@ export default function Dashboard() {
   }, []);
 
   const handleUpdateStatus = async (leadId: string, newStatus: LeadStatus) => {
-    // Optimistic UI update
     setLeads(prevLeads => 
       prevLeads.map(lead => 
         lead.id === leadId ? { ...lead, status: newStatus } : lead
@@ -42,14 +40,12 @@ export default function Dashboard() {
     );
     
     try {
-      // Send update to server
       await updateLeadStatus(leadId, newStatus);
       toast.success(`Lead status updated to ${newStatus}`);
     } catch (error) {
       console.error('Error updating lead:', error);
       toast.error('Failed to update lead status');
       
-      // Revert the optimistic update if there was an error
       setLeads(prevLeads => 
         prevLeads.map(lead => 
           lead.id === leadId ? { 
@@ -61,7 +57,31 @@ export default function Dashboard() {
     }
   };
 
-  // Calculate stats
+  const handleUpdateScore = async (leadId: string, newScore: number) => {
+    setLeads(prevLeads => 
+      prevLeads.map(lead => 
+        lead.id === leadId ? { ...lead, lead_score: newScore } : lead
+      )
+    );
+    
+    try {
+      await updateLeadScore(leadId, newScore);
+      toast.success('Lead score updated successfully');
+    } catch (error) {
+      console.error('Error updating lead score:', error);
+      toast.error('Failed to update lead score');
+      
+      setLeads(prevLeads => 
+        prevLeads.map(lead => 
+          lead.id === leadId ? { 
+            ...lead, 
+            lead_score: leads.find(l => l.id === leadId)?.lead_score || lead.lead_score 
+          } : lead
+        )
+      );
+    }
+  };
+
   const stats = {
     totalLeads: leads.length,
     newLeads: leads.filter(lead => lead.status === 'new').length,
@@ -108,7 +128,11 @@ export default function Dashboard() {
               <p className="text-muted-foreground">No leads found</p>
             </div>
           ) : (
-            <LeadTable leads={leads} onUpdateStatus={handleUpdateStatus} />
+            <LeadTable 
+              leads={leads} 
+              onUpdateStatus={handleUpdateStatus}
+              onUpdateScore={handleUpdateScore}
+            />
           )}
         </div>
       </main>
