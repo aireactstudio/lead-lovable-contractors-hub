@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Status colors
+				status: {
+					new: '#3b82f6',       // Blue
+					contacted: '#f59e0b',  // Amber
+					interested: '#10b981', // Emerald
+					closed: '#6366f1'      // Indigo
 				}
 			},
 			borderRadius: {
