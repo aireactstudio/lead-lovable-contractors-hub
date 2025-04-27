@@ -9,69 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      contractor_leads: {
-        Row: {
-          business_name: string
-          city: string
-          created_at: string
-          email: string | null
-          id: string
-          last_contacted: string | null
-          lead_score: number | null
-          owner_name: string | null
-          phone_number: string | null
-          profile_url: string | null
-          review_count: number | null
-          review_score: number | null
-          service_category: string
-          source: string
-          state: string
-          status: Database["public"]["Enums"]["lead_status"]
-          website: string | null
-          website_status: string | null
-        }
-        Insert: {
-          business_name: string
-          city: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          last_contacted?: string | null
-          lead_score?: number | null
-          owner_name?: string | null
-          phone_number?: string | null
-          profile_url?: string | null
-          review_count?: number | null
-          review_score?: number | null
-          service_category: string
-          source: string
-          state: string
-          status?: Database["public"]["Enums"]["lead_status"]
-          website?: string | null
-          website_status?: string | null
-        }
-        Update: {
-          business_name?: string
-          city?: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          last_contacted?: string | null
-          lead_score?: number | null
-          owner_name?: string | null
-          phone_number?: string | null
-          profile_url?: string | null
-          review_count?: number | null
-          review_score?: number | null
-          service_category?: string
-          source?: string
-          state?: string
-          status?: Database["public"]["Enums"]["lead_status"]
-          website?: string | null
-          website_status?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
@@ -80,7 +18,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      lead_status: "new" | "contacted" | "interested" | "closed"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -195,8 +133,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      lead_status: ["new", "contacted", "interested", "closed"],
-    },
+    Enums: {},
   },
 } as const
