@@ -1,1 +1,5 @@
+
 project_id = "tpzhkqsfckwpbhxplhee"
+
+[functions.leads-api]
+verify_jwt = false

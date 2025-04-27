@@ -25,24 +25,44 @@ export async function getLeads() {
 
 export async function updateLeadStatus(leadId: string, newStatus: LeadStatus) {
   try {
-    const { data, error } = await supabase
-      .from('contractor_leads')
-      .update({ 
-        status: newStatus,
-        last_contacted: newStatus === 'contacted' ? new Date().toISOString() : undefined 
-      })
-      .eq('id', leadId)
-      .select()
-      .single();
+    console.log('Updating lead status...', { leadId, newStatus });
+    
+    const { data, error } = await supabase.functions.invoke('leads-api', {
+      body: { id: leadId, status: newStatus },
+      method: 'PUT',
+    })
 
     if (error) {
       console.error('Error updating lead:', error);
       throw error;
     }
 
+    console.log('Lead status updated successfully:', data);
     return data;
   } catch (error) {
     console.error('Error in updateLeadStatus function:', error);
+    throw error;
+  }
+}
+
+export async function createLead(leadData: Omit<Lead, 'id' | 'created_at' | 'status'>) {
+  try {
+    console.log('Creating new lead...', leadData);
+    
+    const { data, error } = await supabase.functions.invoke('leads-api', {
+      body: leadData,
+      method: 'POST',
+    })
+
+    if (error) {
+      console.error('Error creating lead:', error);
+      throw error;
+    }
+
+    console.log('Lead created successfully:', data);
+    return data;
+  } catch (error) {
+    console.error('Error in createLead function:', error);
     throw error;
   }
 }
