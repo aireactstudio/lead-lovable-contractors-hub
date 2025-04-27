@@ -1,6 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import type { LeadStatus } from "@/types/leads";
+import type { Lead, LeadStatus } from "@/types/leads";
 
 export async function getLeads() {
   try {
