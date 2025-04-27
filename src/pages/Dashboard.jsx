@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { getLeads, updateLeadStatus } from '@/lib/supabase';
 import Header from '@/components/Header';
