@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { getLeads, updateLeadStatus } from '@/lib/supabase';
 import Header from '@/components/Header';
@@ -8,14 +9,18 @@ import { toast } from '@/components/ui/sonner';
 export default function Dashboard() {
   const [leads, setLeads] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchLeads() {
       try {
+        setIsLoading(true);
         const fetchedLeads = await getLeads();
         setLeads(fetchedLeads);
+        setError(null);
       } catch (error) {
         console.error('Error fetching leads:', error);
+        setError('Failed to fetch leads. Please try again later.');
         toast.error('Failed to fetch leads');
       } finally {
         setIsLoading(false);
@@ -90,6 +95,10 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="p-8 flex justify-center">
               <p>Loading leads...</p>
+            </div>
+          ) : error ? (
+            <div className="p-8 text-center text-red-500">
+              <p>{error}</p>
             </div>
           ) : leads.length === 0 ? (
             <div className="p-8 text-center">
