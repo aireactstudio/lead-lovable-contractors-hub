@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { getLeads, updateLeadStatus } from '@/lib/supabase';
+import { getLeads, updateLeadStatus, updateLeadScore } from '@/lib/supabase';
 import Header from '@/components/Header';
 import LeadTable from '@/components/LeadTable';
 import StatsCard from '@/components/StatsCard';
