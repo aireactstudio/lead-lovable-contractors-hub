@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { getLeads, updateLeadStatus } from '@/lib/supabase';
 import Header from '@/components/Header';
@@ -9,14 +10,20 @@ import type { Lead, LeadStatus } from '@/types/leads';
 export default function Dashboard() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchLeads() {
       try {
+        setIsLoading(true);
+        setError(null);
+        console.log('Attempting to fetch leads...');
         const fetchedLeads = await getLeads();
+        console.log('Leads fetched:', fetchedLeads);
         setLeads(fetchedLeads);
       } catch (error) {
         console.error('Error fetching leads:', error);
+        setError('Failed to fetch leads. Please try again later.');
         toast.error('Failed to fetch leads');
       } finally {
         setIsLoading(false);
@@ -35,6 +42,7 @@ export default function Dashboard() {
     );
     
     try {
+      // Send update to server
       await updateLeadStatus(leadId, newStatus);
       toast.success(`Lead status updated to ${newStatus}`);
     } catch (error) {
@@ -90,6 +98,10 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="p-8 flex justify-center">
               <p>Loading leads...</p>
+            </div>
+          ) : error ? (
+            <div className="p-8 text-center text-red-500">
+              <p>{error}</p>
             </div>
           ) : leads.length === 0 ? (
             <div className="p-8 text-center">

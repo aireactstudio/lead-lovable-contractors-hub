@@ -4,6 +4,7 @@ import type { LeadStatus } from "@/types/leads";
 
 export async function getLeads() {
   try {
+    console.log('Fetching leads...');
     const { data, error } = await supabase
       .from('contractor_leads')
       .select('*')
@@ -14,6 +15,7 @@ export async function getLeads() {
       throw error;
     }
 
+    console.log('Leads fetched successfully:', data?.length || 0);
     return data || [];
   } catch (error) {
     console.error('Error in getLeads function:', error);

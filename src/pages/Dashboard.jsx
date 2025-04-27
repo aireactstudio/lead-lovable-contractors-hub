@@ -15,9 +15,11 @@ export default function Dashboard() {
     async function fetchLeads() {
       try {
         setIsLoading(true);
-        const fetchedLeads = await getLeads();
-        setLeads(fetchedLeads);
         setError(null);
+        console.log('Attempting to fetch leads...');
+        const fetchedLeads = await getLeads();
+        console.log('Leads fetched:', fetchedLeads);
+        setLeads(fetchedLeads);
       } catch (error) {
         console.error('Error fetching leads:', error);
         setError('Failed to fetch leads. Please try again later.');
