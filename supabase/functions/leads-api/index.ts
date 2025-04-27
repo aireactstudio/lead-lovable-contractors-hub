@@ -63,21 +63,44 @@ serve(async (req) => {
     }
 
     if (req.method === 'PUT') {
-      const { id, status } = await req.json()
+      const requestBody = await req.json()
+      const { id } = requestBody
       
-      if (!id || !status) {
+      if (!id) {
         return new Response(
-          JSON.stringify({ error: 'Missing required fields' }),
+          JSON.stringify({ error: 'Missing required field: id' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      // Create an object with fields to update
+      const updateData: Record<string, any> = {}
+      
+      // Handle status update
+      if (requestBody.status) {
+        updateData.status = requestBody.status
+        // Update last_contacted timestamp if the status is being changed to 'contacted'
+        if (requestBody.status === 'contacted') {
+          updateData.last_contacted = new Date().toISOString()
+        }
+      }
+      
+      // Handle lead score update
+      if (typeof requestBody.lead_score === 'number') {
+        updateData.lead_score = requestBody.lead_score
+      }
+
+      // If no fields to update, return error
+      if (Object.keys(updateData).length === 0) {
+        return new Response(
+          JSON.stringify({ error: 'No fields to update provided' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       }
 
       const { data, error } = await supabaseClient
         .from('contractor_leads')
-        .update({ 
-          status,
-          last_contacted: status === 'contacted' ? new Date().toISOString() : undefined 
-        })
+        .update(updateData)
         .eq('id', id)
         .select()
         .single()

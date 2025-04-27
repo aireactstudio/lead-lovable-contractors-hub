@@ -45,6 +45,28 @@ export async function updateLeadStatus(leadId: string, newStatus: LeadStatus) {
   }
 }
 
+export async function updateLeadScore(leadId: string, newScore: number) {
+  try {
+    console.log('Updating lead score...', { leadId, newScore });
+    
+    const { data, error } = await supabase.functions.invoke('leads-api', {
+      body: { id: leadId, lead_score: newScore },
+      method: 'PUT',
+    })
+
+    if (error) {
+      console.error('Error updating lead score:', error);
+      throw error;
+    }
+
+    console.log('Lead score updated successfully:', data);
+    return data;
+  } catch (error) {
+    console.error('Error in updateLeadScore function:', error);
+    throw error;
+  }
+}
+
 export async function createLead(leadData: Omit<Lead, 'id' | 'created_at' | 'status'>) {
   try {
     console.log('Creating new lead...', leadData);
